@@ -4,7 +4,9 @@ import Navigation from './components/navigation/navigation.component';
 import Logo from './components/logo/logo.component';
 import ImageLinkForm from './components/image-link-form/image-link-form.component';
 import Rank from './components/rank/rank.component';
+import SignIn from './components/signin/signin.component';
 import Particles from 'react-particles-js';
+import Register from './components/register/register.component';
 import FaceRecognition from './components/face-recognition/face-recognition.component';
 import './App.css';
 
@@ -17,6 +19,8 @@ function App() {
   const[input, setInput] = useState('');
   const[imageUrl, setImageUrl] = useState('');
   const[box, setBox] = useState({});
+  const [route, setRoute] = useState('signin');
+  const [isSignedIn, setIsSignedIn] = useState(false);
 
   const calaculateFaceLocation = (data) => {
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
@@ -32,7 +36,6 @@ function App() {
   }
 
   const displayFaceBox = (box) => {
-    console.log(box)
     setBox(box)
   }
 
@@ -48,6 +51,17 @@ function App() {
    .catch(err => console.log(err))
     
   }
+
+  const onRouteChange = (route) => {
+    if(route === 'signout') {
+      setIsSignedIn(false)
+    } else if (route === 'home') {
+      setIsSignedIn(true)
+    }
+    setRoute(route)
+  }
+
+
   return (
     <div className="">
        <Particles className='particles' 
@@ -62,11 +76,24 @@ function App() {
                     }
                   }
                 }} />
-      <Navigation />
-      <Logo />
+        <Navigation onRouteChange={onRouteChange} isSignedIn={isSignedIn}/>
+      { route === 'home' ? 
+
+        <div>
+       <Logo />
        <Rank />
       <ImageLinkForm onInputChange={onInputChange} input={input} onSubmit={onSubmit}/>
       <FaceRecognition box={box} imageUrl={imageUrl}/>
+      </div>
+         :
+        (
+          route === 'signin' ?
+          <SignIn onRouteChange={onRouteChange}/>
+          :
+          <Register onRouteChange={onRouteChange}/>
+        )
+      
+       }
     </div>
   );
 }
