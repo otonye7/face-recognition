@@ -75,7 +75,7 @@ function App() {
        })
        .then(response => response.json())
        .then(count => {
-         setUser({...user, count: user.entries})
+         setUser({...user, entries: count })
        })
      }
      displayFaceBox(calaculateFaceLocation(response))
