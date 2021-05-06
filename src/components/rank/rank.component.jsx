@@ -1,13 +1,14 @@
 
 
-const Rank = () => {
+const Rank = ({entries, name}) => {
+    console.log(name)
     return(
         <div>
             <div className='center white f3'>
-                {'OT, your current rank is...'}
+                {`${name}, your current rank is...`}
             </div>
             <div className='center white f1'>
-                {'#5'}
+                {entries}
             </div>
         </div>
     )

@@ -22,26 +22,19 @@ function App() {
   const[box, setBox] = useState({});
   const [route, setRoute] = useState('signin');
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const [user, setUser] = useState({
-    id: '',
-    name: '',
-    email: '',
-    password: '',
-    entries: '',
-    joined: ''
-  });
+  const [user, setUser] = useState({id: '', name: '', email: '', password: '', entries: '', joined: ''});
 
 
-  const loadUser = (user) => {
-    setUser(user)
+  const loadUser = (data) => {
+    setUser({
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      entries: data.entries,
+      joined: data.joined
+    })
   }
-
-
-  // useEffect(() => {
-  //   fetch('http://localhost:3000')
-  //   .then(response => response.json())
-  //   .then(console.log)
-  // }, [])
 
   const calaculateFaceLocation = (data) => {
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
@@ -68,7 +61,25 @@ function App() {
     setImageUrl(input)
 
   app.models.predict(Clarifai.FACE_DETECT_MODEL, input).then
-   (response =>  displayFaceBox(calaculateFaceLocation(response)))
+   (
+     response =>  { 
+     if (response) {
+       fetch('http://localhost:3000/image', {
+         method: 'put',
+         headers: {'Content-Type': 'application/json'},
+         body: JSON.stringify({
+           id: user.id,
+           name: user.name,
+           entries: user.entries
+         })
+       })
+       .then(response => response.json())
+       .then(count => {
+         setUser({...user, count: user.entries})
+       })
+     }
+     displayFaceBox(calaculateFaceLocation(response))
+  })
    .catch(err => console.log(err))
     
   }
@@ -84,6 +95,7 @@ function App() {
 
 
   return (
+    
     <div className="">
        <Particles className='particles' 
                 params={{
@@ -102,7 +114,7 @@ function App() {
 
         <div>
        <Logo />
-       <Rank />
+       <Rank name={user.name} entries={user.entries}/>
       <ImageLinkForm onInputChange={onInputChange} input={input} onSubmit={onSubmit}/>
       <FaceRecognition box={box} imageUrl={imageUrl}/>
       </div>
