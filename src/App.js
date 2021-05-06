@@ -15,12 +15,33 @@ const app = new Clarifai.App({
   apiKey: '6dd75eb04a1b45d89954ef931509204e'
 })
 
+
 function App() {
   const[input, setInput] = useState('');
   const[imageUrl, setImageUrl] = useState('');
   const[box, setBox] = useState({});
   const [route, setRoute] = useState('signin');
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const [user, setUser] = useState({
+    id: '',
+    name: '',
+    email: '',
+    password: '',
+    entries: '',
+    joined: ''
+  });
+
+
+  const loadUser = (user) => {
+    setUser(user)
+  }
+
+
+  // useEffect(() => {
+  //   fetch('http://localhost:3000')
+  //   .then(response => response.json())
+  //   .then(console.log)
+  // }, [])
 
   const calaculateFaceLocation = (data) => {
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
@@ -90,7 +111,7 @@ function App() {
           route === 'signin' ?
           <SignIn onRouteChange={onRouteChange}/>
           :
-          <Register onRouteChange={onRouteChange}/>
+          <Register onRouteChange={onRouteChange} user={user} loadUser={loadUser}/>
         )
       
        }
