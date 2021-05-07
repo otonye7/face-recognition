@@ -1,10 +1,10 @@
 import {useState} from 'react';
 
 const Register = ({onRouteChange, loadUser}) => {
-
+  
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
 
   const onEmailChanged = (e) => {
     setEmail(e.target.value)
@@ -20,7 +20,7 @@ const Register = ({onRouteChange, loadUser}) => {
 
   const onSubmitSignIn = () => {
     fetch('http://localhost:3000/register', {
-      method: 'POST',
+      method: 'post',
       headers: {'Content-Type' : 'application/json'},
       body: JSON.stringify({
         email: email,

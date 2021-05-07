@@ -1,7 +1,6 @@
 
 
 const Rank = ({entries, name}) => {
-    console.log(name)
     return(
         <div>
             <div className='center white f3'>
